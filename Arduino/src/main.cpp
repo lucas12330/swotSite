@@ -11,15 +11,6 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  digitalWrite(trigg, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigg, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigg, LOW);
-  long duration = pulseIn(echo, HIGH);
-  long distance = duration * 0.034 / 2;
-  Serial.print("Distance: ");
-  Serial.println(distance);
-  delay(1000);
+
 }
 
