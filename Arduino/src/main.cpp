@@ -1,18 +1,25 @@
 #include <Arduino.h>
-
-// put function declarations here:
-int myFunction(int, int);
+int echo = 2;
+int trigg = 3;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  pinMode(trigg, OUTPUT);
+  pinMode(echo, INPUT);
+  Serial.begin(9600);
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  digitalWrite(trigg, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigg, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigg, LOW);
+  long duration = pulseIn(echo, HIGH);
+  long distance = duration * 0.034 / 2;
+  Serial.print("Distance: ");
+  Serial.println(distance);
+  delay(1000);
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
