@@ -13,3 +13,12 @@
 
 </body>
 </html>
+<?php
+// Vérifier si la variable 'token' est passée dans l'URL
+if (isset($_GET['token'])) {
+    $userToken = $_GET['token'];
+    echo "Le token utilisateur est : " . $userToken;
+} else {
+    echo "Aucun token trouvé.";
+}
+?>
