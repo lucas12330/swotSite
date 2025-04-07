@@ -58,7 +58,7 @@ if(isset($_COOKIE['userToken'])) {
 
         if ($userData) {
             // L'utilisateur est déjà connecté, rediriger vers la page d'accueil ou tableau de bord
-            header("Location: accueil.php?token=" . urlencode($userToken));
+            header("Location: accueil.php?token=" . $userToken);
             exit;
         }
     } catch (PDOException $e) {

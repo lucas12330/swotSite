@@ -34,7 +34,7 @@ if (isset($_POST['logout'])) {
     exit();
 }
  
-<?php
+
 $servname = 'localhost';
 $dbname = 'swot';
 $user = 'root';
