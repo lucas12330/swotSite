@@ -44,10 +44,8 @@ $user = 'root';
 $pass = '';
 
 // Vérifier si l'utilisateur était déjà connecté
-if(isset($_COOKIE['userToken'])) {
+if (isset($_COOKIE['userToken'])) {
     try {
-        //TODO: il faut refaire le code pour utiliser la session php et transmettre le token dans la session
-        $userToken = $_COOKIE['userToken'];
         // Connexion à la base de données
         $dbco = new PDO("mysql:host=$servname;dbname=$dbname;charset=utf8", $user, $pass);
         $dbco->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -59,8 +57,10 @@ if(isset($_COOKIE['userToken'])) {
 
         if ($userData) {
             // L'utilisateur est déjà connecté, rediriger vers la page d'accueil ou tableau de bord
-            header("Location: accueil.php?token=" . $userToken);
+            header("Location: accueil.php?token=" . $_COOKIE['userToken']);
             exit;
+        } else {
+            echo "Aucun utilisateur trouvé avec ce token.";
         }
     } catch (PDOException $e) {
         // En cas d'erreur de connexion à la base de données
@@ -69,3 +69,4 @@ if(isset($_COOKIE['userToken'])) {
     }
 }
 ?>
+

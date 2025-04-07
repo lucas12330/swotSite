@@ -2,7 +2,7 @@
 //! Déconnexion
 if (isset($_POST['logout'])) {
     setcookie('userToken', '', time() - 3600, '/');
-    header("Location: index.php");
+    header("Location: login.php"); // Redirection vers login.php après la déconnexion
     exit();
 }
 
@@ -12,7 +12,7 @@ $user = 'root';
 $pass = '';
 $userData = null;
 
-// ✅ Correction : on vérifie bien l'existence du cookie
+//  Correction : on vérifie bien l'existence du cookie
 if (isset($_COOKIE['userToken'])) {
     $token = $_COOKIE['userToken'];
 
@@ -27,8 +27,8 @@ if (isset($_COOKIE['userToken'])) {
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$userData) {
-            // Token invalide → redirection vers la page de connexion
-            header("Location: index.php");
+            // Token invalide → redirection vers la page de connexion (login.php)
+            header("Location: login.php");
             exit();
         }
 
@@ -37,8 +37,8 @@ if (isset($_COOKIE['userToken'])) {
         exit();
     }
 } else {
-    // Cookie non défini → redirection
-    header("Location: index.php");
+    // Cookie non défini → redirection vers la page de connexion (login.php)
+    header("Location: login.php");
     exit();
 }
 ?>
