@@ -74,5 +74,3 @@ if (isset($_GET['userToken'])) {
     exit;
 }
 ?>
-
-?>
