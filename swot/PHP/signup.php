@@ -42,7 +42,9 @@ try {
     ]);
     setcookie('userToken', $userToken, time() + 3600 * 24 * 30, '/'); // Cookie valable 30 jours
 
-
+    // Redirection vers la page d'accueil
+    header("Location: ../accueil.php?token=$userToken");
+    exit();
 
 
     
