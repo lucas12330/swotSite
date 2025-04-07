@@ -47,6 +47,7 @@ $pass = '';
 if(isset($_COOKIE['userToken'])) {
     try {
         //TODO: il faut refaire le code pour utiliser la session php et transmettre le token dans la session
+        $userToken = $_COOKIE['userToken'];
         // Connexion à la base de données
         $dbco = new PDO("mysql:host=$servname;dbname=$dbname;charset=utf8", $user, $pass);
         $dbco->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
