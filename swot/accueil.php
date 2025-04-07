@@ -49,6 +49,7 @@ if (isset($_COOKIE['userToken'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
     <link rel="stylesheet" href="./CSS/accueil.css">
+    
 </head>
 <body>
     <header>
@@ -64,8 +65,60 @@ if (isset($_COOKIE['userToken'])) {
 
     <main>
         <p class="données-swot">DONNÉES SWOT</p>
+
+        <div class="btn-container">
+            <button class="btn">Prendre une mesure</button>
+        </div>
+
+    
+
+        <!-- Texte après l'image -->
         <p class="base-de-données">Base De Données :</p>
-        <button class="btn">Prendre Une Mesure !</button>
+
+        <table>
+    <thead>
+        <tr>
+            <th>Date</th>            <!-- Colonne de gauche (Date) -->
+            <th>Heure</th>           <!-- Colonne de droite (Heure) -->
+            <th>Profondeur (en m)</th>  <!-- Colonne de profondeur -->
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>2025-04-07</td>   <!-- Exemple de date -->
+            <td>10:00</td>        <!-- Exemple d'heure -->
+            <td>10</td>           <!-- Exemple de profondeur -->
+        </tr>
+        <tr>
+            <td>2025-04-07</td>
+            <td>12:00</td>
+            <td>20</td>
+        </tr>
+        <tr>
+            <td>2025-04-07</td>
+            <td>14:00</td>
+            <td>30</td>
+        </tr>
+        <tr>
+            <td>2025-04-08</td>
+            <td>09:00</td>
+            <td>15</td>
+        </tr>
+        <tr>
+            <td>2025-04-08</td>
+            <td>11:00</td>
+            <td>25</td>
+        </tr>
+        <tr>
+            <td>2025-04-08</td>
+            <td>13:00</td>
+            <td>35</td>
+        </tr>
+    </tbody>
+</table>
+
+
     </main>
 </body>
 </html>
+

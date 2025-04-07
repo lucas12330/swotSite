@@ -1,38 +1,103 @@
 body { 
-    background-color: rgb(0, 0, 0) 
+    background-color: rgb(0, 0, 0);
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
 }
 
+/* Titre principal */
 .données-swot {
     font-size: 35px;
-    color: rgb(255, 255, 255);
+    color: white;
     text-align: center;
     font-weight: bold;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
+/* Sous-titre "Base de données" */
 .base-de-données {
     font-size: 30px;
-    color: rgb(255, 255, 255);
+    color: white;
     text-align: left;
     font-weight: bold;
-    margin-top: 100px;
-    margin-left: 25px
+    margin: 50px 0 20px 25px;
 }
 
-.btn {
-    background-color: rgb(141, 29, 216); /* Couleur de fond */
-    color: white; /* Couleur du texte */
-    font-size: 16px; /* Taille du texte */
-    padding: 10px 20px; /* Espace intérieur */
-    border: none; /* Supprime la bordure */
-    border-radius: 5px; /* Arrondi les bords */
-    cursor: pointer; /* Curseur en main */
-    transition: background-color 0.3s ease; /* Animation fluide */
-    margin-left: 25px
+/* Conteneur pour les boutons */
+.btn-container {
+    display: flex;
+    justify-content: center; /* change à flex-end si tu veux à droite */
+    gap: 20px; /* espace entre les boutons */
+    margin: 30px 0;
+}
 
+/* Style des boutons */
+.btn {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .btn:hover {
-    background-color: #000000; /* Changement de couleur au survol */
+    background-color: #838383;
+    transform: scale(1.05);
 }
 
+
+
+/* Header avec bouton déconnexion */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.deconnection form {
+    margin: 0;
+}
+
+header button {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+header button:hover {
+    background-color: #838383;
+}
+
+/* Titre d'accueil */
+.accueil {
+    color: white;
+    font-size: 24px;
+}
+
+/* Ajout du CSS pour le tableau */
+table {
+    width: 90%; 
+    margin: 60px auto; 
+    border-collapse: collapse; 
+}
+
+th, td {
+    padding: 10px; 
+    text-align: center; 
+    border: 1px solid #ddd; 
+    color: white;
+}
+
+th {
+    background-color: #868686; 
+    font-weight: bold; 
+}
