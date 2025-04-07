@@ -20,7 +20,7 @@ body {
 }
 
 .btn {
-    background-color: blueviolet; /* Couleur de fond */
+    background-color: rgb(141, 29, 216); /* Couleur de fond */
     color: white; /* Couleur du texte */
     font-size: 16px; /* Taille du texte */
     padding: 10px 20px; /* Espace intérieur */
@@ -28,10 +28,11 @@ body {
     border-radius: 5px; /* Arrondi les bords */
     cursor: pointer; /* Curseur en main */
     transition: background-color 0.3s ease; /* Animation fluide */
-    margin-right: 25px
+    margin-left: 25px
 
 }
 
 .btn:hover {
     background-color: #000000; /* Changement de couleur au survol */
 }
+
