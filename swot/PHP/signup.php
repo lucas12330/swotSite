@@ -5,10 +5,7 @@
  * Copyright (c) 2025 Altear Technologies
  */
 
-$servname = 'localhost';
-$dbname = 'swot';
-$user = 'root';
-$pass = '';
+include 'bddConnect.php'; // Inclusion de la classe Database
 
 $nom = $_POST['nom'];
 $prenom = $_POST['prenom'];
@@ -17,10 +14,12 @@ $password = $_POST['password'];
 $role = $_POST['role'];
 $stayConnect = isset($_POST['stayConnect']) ? $_POST['stayConnect'] : 0;
 
+//! Création de la classe db
+$db = new Database('localhost', 'swot', 'root', '');
+
 try {
     // Connexion à la base de données
-    $dbco = new PDO("mysql:host=$servname;dbname=$dbname;charset=utf8", $user, $pass);
-    $dbco->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $dbco = $db->getConnection();
 
     // Verifier si un cookie de token existe
     if (isset($_COOKIE['userToken'])) {

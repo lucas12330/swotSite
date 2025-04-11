@@ -1,4 +1,7 @@
 <?php
+// ? Inclusion de la classe bdd
+include './PHP/bddConnect.php';
+
 //! Déconnexion
 if (isset($_POST['logout'])) {
     setcookie('userToken', '', time() - 3600, '/');
@@ -6,10 +9,7 @@ if (isset($_POST['logout'])) {
     exit();
 }
 
-$servname = 'localhost';
-$dbname = 'swot';
-$user = 'root';
-$pass = '';
+$db = new Database('localhost', 'swot', 'root', '');
 $userData = null;
 
 //  Correction : on vérifie bien l'existence du cookie
@@ -17,8 +17,7 @@ if (isset($_COOKIE['userToken'])) {
     $token = $_COOKIE['userToken'];
 
     try {
-        $dbco = new PDO("mysql:host=$servname;dbname=$dbname;charset=utf8", $user, $pass);
-        $dbco->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $dbco = $db->getConnection();
 
         $stmt = $dbco->prepare("SELECT * FROM user WHERE TOKEN = :token");
         $stmt->bindParam(':token', $token, PDO::PARAM_STR);

@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
-    <link rel="stylesheet" href="./CSS/index.css">
+    <link rel="stylesheet" href="./CSS/log.css">
 </head>
 <body>
+    <header>
+        <form method="post">
+            <button type="submit" name="loginButton">Se connecter</button>
+        </form>
+    </header>
     <div class="container">
         <h2>Inscription</h2>
         <form action="./PHP/signup.php" method="POST">
@@ -38,18 +43,20 @@
 </body>
 </html>
 <?php
-$servname = 'localhost';
-$dbname = 'swot';
-$user = 'root';
-$pass = '';
+include 'PHP/bddConnect.php';
+if (isset($_POST['loginButton'])) {
+    header("Location: login.php");
+    exit;
+}
 
+
+$db = new Database('localhost', 'swot', 'root', '');
 // Vérifier si l'utilisateur était déjà connecté
 if (isset($_COOKIE['userToken'])) {
     try {
         // Connexion à la base de données
-        $dbco = new PDO("mysql:host=$servname;dbname=$dbname;charset=utf8", $user, $pass);
-        $dbco->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        $dbco = $db->getConnection();
         // Requête préparée sécurisée pour vérifier le token
         $stmt = $dbco->prepare("SELECT * FROM user WHERE TOKEN = :token");
         $stmt->execute([':token' => $_COOKIE['userToken']]);

@@ -5,6 +5,11 @@ include './PHP/bddConnect.php';
 // Créer une instance de la classe Database
 $db = new Database('localhost', 'swot', 'root', '');
 
+if (isset($_POST['signin'])) {
+    header("Location: index.php"); // Redirection vers login.php après la déconnexion
+    exit();
+}
+
 // Vérifier si le formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Récupérer les valeurs du formulaire
@@ -30,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 session_start();
                 $_SESSION['user_id'] = $user['id'];  // Enregistrer l'id de l'utilisateur dans la session
                 $_SESSION['email'] = $user['email']; // Enregistrer l'email dans la session
-                $_COOKIE['userToken'] = $user['TOKEN']; // Enregistrer le token dans un cookie
+                setcookie('userToken', $user['TOKEN'], time() + 86400, "/"); // Cookie valable 24h sur tout le site
                 // Rediriger vers la page d'accueil
 
                 header("Location: accueil.php");
@@ -53,9 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-    <link rel="stylesheet" href="./CSS/login.css">
+    <link rel="stylesheet" href="./CSS/log.css">
 </head>
 <body>
+    <header>
+        <form  method="post">
+            <button type="submit" name="signin">S'inscrire</button>
+        </form>
+    </header>
     <div class="login-container">
         <h2>Se connecter</h2>
         <form method="POST">
