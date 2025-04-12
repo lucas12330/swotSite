@@ -2,6 +2,12 @@
 // ? Inclusion de la classe bdd
 include './PHP/bddConnect.php';
 
+// ? Quand le bouton prendre la mesure est appuyé cela ouvre excel.php et envoi des donné a la bdd
+if (isset($_POST['btn'])) {
+    header("Location: excel.php"); // Redirection vers excel.php après la déconnexion
+    exit();
+}
+
 //! Déconnexion
 if (isset($_POST['logout'])) {
     setcookie('userToken', '', time() - 3600, '/');
@@ -66,7 +72,9 @@ if (isset($_COOKIE['userToken'])) {
         <p class="données-swot">DONNÉES SWOT</p>
 
         <div class="btn-container">
-            <button class="btn">Prendre une mesure</button>
+            <form method="post">
+                <button type=" submit" class="btn" name="btn">Prendre une mesure</button>
+            </form>
         </div>
 
     

@@ -6,7 +6,7 @@ include './PHP/bddConnect.php';
 $db = new Database('localhost', 'swot', 'root', '');
 
 if (isset($_POST['signin'])) {
-    header("Location: index.php"); // Redirection vers login.php après la déconnexion
+    header("Location: signup.php"); // Redirection vers login.php après la déconnexion
     exit();
 }
 
