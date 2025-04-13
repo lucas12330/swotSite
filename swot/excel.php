@@ -12,6 +12,12 @@ if(isset($_POST['back'])){
     exit();
 }
 
+// ? Faire en sorte que lorsque le cookie ,n'est pas détecté renvoyé sur login.php
+if (!isset($_COOKIE['userToken'])) {
+    header("Location: login.php"); // Redirection vers login.php après la déconnexion
+    exit();
+}
+
 // ? Quand le bouton prendre la mesure est appuyé cela ouvre excel.php et envoi des donné a la bdd
 if (isset($_POST['data'])) {
     // Récupérer les valeurs du formulaire

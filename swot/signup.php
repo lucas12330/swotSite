@@ -45,8 +45,7 @@
 <?php
 // ! Fonction pour générer un token unique
 function generateToken($lenght = 10){
-    return
-    substr(bin2hex(random_bytes($lenght)), 0, $lenght);
+    return substr(bin2hex(random_bytes($lenght)), 0, $lenght);
 }
 
 include 'PHP/bddConnect.php';
@@ -55,17 +54,16 @@ if (isset($_POST['loginButton'])) {
     exit;
 }
 
-
 $db = new Database('localhost', 'swot', 'root', '');
 
-// Envoie des donné à la bdd
+// Envoie des données à la bdd
 if (isset($_POST['sub'])) {
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
     $email = $_POST['email'];
     $password = $_POST['password'];
     $role = $_POST['role'];
-    $stayConnect = isset($_POST['stayConnect']) ? $_POST['stayConnect'] : 0;
+    $stayConnect = isset($_POST['stayConnect']) ? true : false; // Vérifier si la case est cochée
 
     // Générer un token unique
     $userToken = generateToken(20);
@@ -85,39 +83,21 @@ if (isset($_POST['sub'])) {
             ':token' => $userToken,
             ':password' => password_hash($password, PASSWORD_DEFAULT) // Sécurisation du mot de passe
         ]);
-        setcookie('userToken', $userToken, time() + 3600 * 24 * 30, '/'); // Cookie valable 30 jours
+
+        if ($stayConnect) {
+            // Si "Rester connecté" est activé, définir un cookie avec une durée de 30 jours
+            setcookie('userToken', $userToken, time() + 3600 * 24 * 30, '/'); // Cookie valable 30 jours
+        } else {
+            // Sinon, stocker le token dans la session
+            session_start();
+            $_SESSION['userToken'] = $userToken;
+        }
 
         // Redirection vers la page d'accueil
-        header("Location: accueil.php?token=$userToken");
+        header("Location: accueil.php");
         exit();
     } catch (PDOException $e) {
         echo "Erreur : " . $e->getMessage();
     }
 }
-
-// Vérifier si l'utilisateur était déjà connecté
-if (isset($_COOKIE['userToken'])) {
-    try {
-        // Connexion à la base de données
-
-        $dbco = $db->getConnection();
-        // Requête préparée sécurisée pour vérifier le token
-        $stmt = $dbco->prepare("SELECT * FROM user WHERE TOKEN = :token");
-        $stmt->execute([':token' => $_COOKIE['userToken']]);
-        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($userData) {
-            // L'utilisateur est déjà connecté, rediriger vers la page d'accueil ou tableau de bord
-            header("Location: accueil.php?token=" . $_COOKIE['userToken']);
-            exit;
-        } else {
-            echo "Aucun utilisateur trouvé avec ce token.";
-        }
-    } catch (PDOException $e) {
-        // En cas d'erreur de connexion à la base de données
-        echo "Erreur de connexion à la base de données : " . $e->getMessage();
-        exit;
-    }
-}
 ?>
-

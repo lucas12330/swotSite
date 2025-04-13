@@ -1,56 +1,46 @@
 <?php
-// Inclure la classe de connexion à la base de données
 include './PHP/bddConnect.php';
-
-// Créer une instance de la classe Database
 $db = new Database('localhost', 'swot', 'root', '');
 
 if (isset($_POST['signin'])) {
-    header("Location: signup.php"); // Redirection vers login.php après la déconnexion
+    header("Location: signup.php"); // Redirection vers signup.php
     exit();
 }
 
-// Vérifier si le formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Récupérer les valeurs du formulaire
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $stayConnect = isset($_POST['stayConnect']) ? true : false;
 
     try {
-        // Se connecter à la base de données
         $pdo = $db->getConnection();
-
-        // Préparer une requête pour vérifier les identifiants
         $stmt = $pdo->prepare("SELECT * FROM user WHERE MAIL = :email");
         $stmt->bindParam(':email', $email);
         $stmt->execute();
-
-        // Vérifier si l'utilisateur existe
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user) {
-            // Vérifier si le mot de passe est correct (assumons qu'il est haché)
-            if (password_verify($password, $user['PASSWORD'])) {
-                // Authentification réussie, démarrer la session
-                session_start();
-                $_SESSION['user_id'] = $user['id'];  // Enregistrer l'id de l'utilisateur dans la session
-                $_SESSION['email'] = $user['email']; // Enregistrer l'email dans la session
-                setcookie('userToken', $user['TOKEN'], time() + 86400, "/"); // Cookie valable 24h sur tout le site
-                // Rediriger vers la page d'accueil
-
-                header("Location: accueil.php");
-                exit;
+        if ($user && password_verify($password, $user['PASSWORD'])) {
+            // Authentification réussie
+            if ($stayConnect) {
+                // Enregistrer le token dans un cookie
+                setcookie('userToken', $user['TOKEN'], time() + 86400 * 30, "/"); // Cookie valable 30 jours
             } else {
-                echo "Mot de passe incorrect.";
+                // Enregistrer le token dans la session
+                session_start();
+                $_SESSION['userToken'] = $user['TOKEN'];
             }
+
+            header("Location: accueil.php");
+            exit;
         } else {
-            echo "Aucun utilisateur trouvé avec cet email.";
+            echo "Email ou mot de passe incorrect.";
         }
     } catch (PDOException $e) {
-        echo "Erreur lors de la connexion : " . $e->getMessage();
+        echo "Erreur : " . $e->getMessage();
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -74,6 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <label for="password">Mot de passe :</label>
             <input type="password" id="password" name="password" required>
+
+            <label for="stayConnect">Rester connecter ?</label>
+            <input type="checkbox" name="stayConnect" id="stayConnect" value="on">
 
             <button type="submit">Se connecter</button>
         </form>

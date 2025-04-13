@@ -1,52 +1,49 @@
 <?php
-// ? Inclusion de la classe bdd
 include './PHP/bddConnect.php';
-
-// ? Quand le bouton prendre la mesure est appuyé cela ouvre excel.php et envoi des donné a la bdd
-if (isset($_POST['btn'])) {
-    header("Location: excel.php"); // Redirection vers excel.php après la déconnexion
-    exit();
-}
-
-//! Déconnexion
-if (isset($_POST['logout'])) {
-    setcookie('userToken', '', time() - 3600, '/');
-    header("Location: login.php"); // Redirection vers login.php après la déconnexion
-    exit();
-}
-
+session_start();
 $db = new Database('localhost', 'swot', 'root', '');
-$userData = null;
 
-//  Correction : on vérifie bien l'existence du cookie
+// Vérification du cookie ou de la session
+$userData = null;
 if (isset($_COOKIE['userToken'])) {
     $token = $_COOKIE['userToken'];
-
-    try {
-        $dbco = $db->getConnection();
-
-        $stmt = $dbco->prepare("SELECT * FROM user WHERE TOKEN = :token");
-        $stmt->bindParam(':token', $token, PDO::PARAM_STR);
-        $stmt->execute();
-
-        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$userData) {
-            // Token invalide → redirection vers la page de connexion (login.php)
-            header("Location: login.php");
-            exit();
-        }
-
-    } catch (PDOException $e) {
-        echo "Erreur de connexion : " . $e->getMessage();
-        exit();
-    }
+} elseif (isset($_SESSION['userToken'])) {
+    $token = $_SESSION['userToken'];
 } else {
-    // Cookie non défini → redirection vers la page de connexion (login.php)
     header("Location: login.php");
     exit();
 }
+
+try {
+    $dbco = $db->getConnection();
+    $stmt = $dbco->prepare("SELECT * FROM user WHERE TOKEN = :token");
+    $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+    $stmt->execute();
+
+    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$userData) {
+        // Token invalide → redirection vers la page de connexion
+        header("Location: login.php");
+        exit();
+    }
+
+    // Récupération des données supplémentaires (exemple des mesures)
+    $dataQuery = $dbco->prepare("SELECT DATE, HEURE, PROFONDEUR FROM data WHERE DATE != '0000-00-00' ORDER BY DATE ASC, HEURE ASC");
+    $dataQuery->execute();
+    $data = $dataQuery->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    echo "Erreur de connexion : " . $e->getMessage();
+    exit();
+}
+if(isset($_POST['btn'])) {
+    // Redirection vers la page excel.php pour prendre une mesure
+    header("Location: excel.php");
+    exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -54,13 +51,20 @@ if (isset($_COOKIE['userToken'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
     <link rel="stylesheet" href="./CSS/accueil.css">
-    
 </head>
 <body>
+<script>
+    window.addEventListener('beforeunload', function (e) {
+        // Envoi d'une requête AJAX pour supprimer la session à la fermeture de la page
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'logout.php', true);
+        xhr.send();
+    });
+</script>
     <header>
         <div class="deconnection">
-            <form method="post">
-                <button type="submit" name="logout">Déconnecter</button>
+            <form method="post" action="./PHP/logout.php">
+                <button type="submit" name="logout" class="btn">Déconnecter</button>
             </form>
         </div>
         <div>
@@ -73,59 +77,35 @@ if (isset($_COOKIE['userToken'])) {
 
         <div class="btn-container">
             <form method="post">
-                <button type=" submit" class="btn" name="btn">Prendre une mesure</button>
+                <button type="submit" class="btn" name="btn">Prendre une mesure</button>
             </form>
         </div>
-
-    
-
-        <!-- Texte après l'image -->
-        <p class="base-de-données">Base De Données :</p>
-
+        
         <table>
-    <thead>
-        <tr>
-            <th>Date</th>            <!-- Colonne de gauche (Date) -->
-            <th>Heure</th>           <!-- Colonne de droite (Heure) -->
-            <th>Profondeur (en m)</th>  <!-- Colonne de profondeur -->
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>2025-04-07</td>   <!-- Exemple de date -->
-            <td>10:00</td>        <!-- Exemple d'heure -->
-            <td>10</td>           <!-- Exemple de profondeur -->
-        </tr>
-        <tr>
-            <td>2025-04-07</td>
-            <td>12:00</td>
-            <td>20</td>
-        </tr>
-        <tr>
-            <td>2025-04-07</td>
-            <td>14:00</td>
-            <td>30</td>
-        </tr>
-        <tr>
-            <td>2025-04-08</td>
-            <td>09:00</td>
-            <td>15</td>
-        </tr>
-        <tr>
-            <td>2025-04-08</td>
-            <td>11:00</td>
-            <td>25</td>
-        </tr>
-        <tr>
-            <td>2025-04-08</td>
-            <td>13:00</td>
-            <td>35</td>
-        </tr>
-    </tbody>
-</table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Profondeur (en m)</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($data as $dataRow) : ?>
+            <tr>
+                <td><?php echo htmlspecialchars($dataRow['DATE'] !== '0000-00-00' ? $dataRow['DATE'] : 'Date non définie'); ?></td>
+                <td><?php echo htmlspecialchars(substr($dataRow['HEURE'], 0, 5)); ?></td>
+                <td><?php echo htmlspecialchars($dataRow['PROFONDEUR']); ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+        </table>
 
+        <div>
+            <form method="post" action="./PHP/export_csv.php">
+                <button type="submit" name="download" class="btn">Télécharger toutes les données</button>
+            </form>
+        </div>
 
     </main>
 </body>
 </html>
-
