@@ -10,6 +10,7 @@
             "includePath": [
                 "C:/wamp64/www/swotSite/Arduino/include",
                 "C:/wamp64/www/swotSite/Arduino/src",
+                "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                 "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/Modbus-Radio/src",
                 "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/RadioHead",
                 "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
@@ -17,10 +18,9 @@
                 "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/Modbus-Arduino/src",
                 "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/variants/standard",
-                "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/Unity/src",
+                "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/Unity",
                 "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                 "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                 "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 ""
             ],
@@ -29,6 +29,7 @@
                 "path": [
                     "C:/wamp64/www/swotSite/Arduino/include",
                     "C:/wamp64/www/swotSite/Arduino/src",
+                    "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                     "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/Modbus-Radio/src",
                     "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/RadioHead",
                     "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
@@ -36,10 +37,9 @@
                     "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/Modbus-Arduino/src",
                     "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/variants/standard",
-                    "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/Unity/src",
+                    "C:/wamp64/www/swotSite/Arduino/.pio/libdeps/uno/Unity",
                     "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                     "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                    "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                     "C:/Users/Lucas Bezanilla/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     ""
                 ]
