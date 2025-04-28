@@ -39,7 +39,7 @@ try {
 }
 if(isset($_POST['btn'])) {
     // Redirection vers la page excel.php pour prendre une mesure
-    header("Location: excel.php");
+    header("Location: ./PHP/python_exec.php");
     exit();
 }
 ?>
@@ -53,14 +53,6 @@ if(isset($_POST['btn'])) {
     <link rel="stylesheet" href="./CSS/accueil.css">
 </head>
 <body>
-<script>
-    window.addEventListener('beforeunload', function (e) {
-        // Envoi d'une requête AJAX pour supprimer la session à la fermeture de la page
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'logout.php', true);
-        xhr.send();
-    });
-</script>
     <header>
         <div class="deconnection">
             <form method="post" action="./PHP/logout.php">
