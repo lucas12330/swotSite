@@ -1,0 +1,9 @@
+class satellite{
+    public:
+
+
+    private:
+
+
+    
+};
