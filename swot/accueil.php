@@ -121,6 +121,9 @@ if(isset($_POST['btn'])) {
             <form method="post">
                 <button type="submit" class="btn" name="btn">Prendre une mesure</button>
             </form>
+            <form action='./prog_mesure.php' method="post">
+                <button type="submit" class="btn">Programmer une mesure</button>
+            </form>
         </div>
         
         <table>
