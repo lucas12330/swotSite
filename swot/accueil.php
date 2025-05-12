@@ -151,6 +151,29 @@ if(isset($_POST['btn'])) {
             </form>
         </div>
 
+        <script>
+            // Fonction pour rafraîchir les messages MQTT
+            function refreshMessages() {
+                fetch('messages.log')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('mqtt-messages').innerText = data;
+                    })
+                    .catch(error => console.error('Erreur lors du chargement des messages :', error));
+            }
+
+            // Rafraîchir les messages toutes les 5 secondes
+            setInterval(refreshMessages, 5000);
+
+            // Charger les messages immédiatement au chargement de la page
+            refreshMessages();
+        </script>
+
+        <div>
+            <h2>Messages MQTT reçus :</h2>
+            <pre id="mqtt-messages">Chargement des messages...</pre>
+        </div>
+
     </main>
 </body>
 </html>
