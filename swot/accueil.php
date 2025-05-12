@@ -1,5 +1,33 @@
 <?php
 include './PHP/bddConnect.php';
+require('vendor/autoload.php');
+use \PhpMqtt\Client\MqttClient;
+use \PhpMqtt\Client\ConnectionSettings;
+
+//! Mise en place de la connexiion MQTT 
+$server   = 'broker.emqx.io';
+$port     = 1883;
+$clientId = rand(5, 15);
+$username = 'emqx_user';
+$password = 'public';
+$clean_session = false;
+$mqtt_version = MqttClient::MQTT_3_1_1;
+
+//! Fonction de connecion au serveur MQTT
+$connectionSettings = (new ConnectionSettings)
+  ->setUsername($username)
+  ->setPassword($password)
+  ->setKeepAliveInterval(60)
+  ->setLastWillTopic('emqx/test/last-will')
+  ->setLastWillMessage('client disconnect')
+  ->setLastWillQualityOfService(1);
+
+
+$mqtt = new MqttClient($server, $port, $clientId, $mqtt_version);
+
+$mqtt->connect($connectionSettings, $clean_session);
+printf("client connected\n");
+
 session_start();
 $db = new Database('localhost', 'swot', 'root', '');
 
@@ -39,7 +67,29 @@ try {
 }
 if(isset($_POST['btn'])) {
     // Redirection vers la page excel.php pour prendre une mesure
-    header("Location: ./PHP/python_exec.php");
+
+    //! La fonction de publication 
+    $payload = array(
+        'protocol' => 'tcp',
+        'date' => date('Y-m-d H:i:s'),
+        'ordre' => 'mesureIM'
+    );
+    $mqtt->publish(
+        // topic
+        'test/swot',
+        // payload
+        "bonjour",
+        // qos
+        0,
+        // retain
+        true
+    );
+    printf("msg send\n");
+    sleep(1);
+
+    // Déconnexion du client MQTT après l'envoi des messages
+    $mqtt->disconnect();
+    header("Location: accueil.php");
     exit();
 }
 ?>
