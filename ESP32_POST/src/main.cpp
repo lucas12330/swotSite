@@ -1,4 +1,6 @@
 #include <WiFi.h>
+#include <HTTPClient.h>
+#include <Arduino.h>
 
 
 const char* ssid = "WebSwotServer";
