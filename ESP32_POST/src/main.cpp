@@ -17,6 +17,11 @@ const char* mqtt_server = "broker.emqx.io";
 WiFiClient espClient; // gère la connexion réseau
 PubSubClient client(espClient); // client MQTT qui utilise espClient pour communiquer
 
+JsonDocument doc;
+
+//? Fonction de rappel pour traiter les messages MQTT
+void callback(char* topic, byte* payload, unsigned int length);
+
 void reconnect() {
   while (!client.connected()) {
     if (client.connect("ESP32Client")) {
