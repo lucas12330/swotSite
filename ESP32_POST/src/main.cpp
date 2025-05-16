@@ -1,5 +1,6 @@
 #include <WiFi.h>
 
+
 const char* ssid = "WebSwotServer";
 const char* password = "mx230448mx";
 
