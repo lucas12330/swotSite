@@ -70,15 +70,13 @@ if(isset($_POST['btn'])) {
 
     //! La fonction de publication 
     $payload = array(
-        'protocol' => 'tcp',
-        'date' => date('Y-m-d H:i:s'),
-        'ordre' => 'mesureIM'
+        'allumer_led' => 'rouge',
     );
     $mqtt->publish(
         // topic
         'test/swot',
         // payload
-        "bonjour",
+        json_encode($payload),
         // qos
         0,
         // retain
