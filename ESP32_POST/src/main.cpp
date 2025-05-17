@@ -1,99 +1,104 @@
 #include <WiFi.h>
-#include <HTTPClient.h>
-#include <Arduino.h>
 #include <PubSubClient.h>
-#include <ArduinoJson.h>
+#include <Arduino.h>
+#include <HTTPClient.h>
+#include <../lib/sonar.hpp>
 
-//? Déclaration dees variable 
-int ledPin = 2; // Pin de la LED
-int led2 = 18; // Pin de la LED 2
+// WiFi
+const char *ssid = "WebSwotServer"; // Enter your Wi-Fi name
+const char *password = "mx230448mx";  // Enter Wi-Fi password
 
-const char* ssid = "WebSwotServer";
-const char* password = "mx230448mx";
+//? Déclaration des variables
+int led = 2; // GPIO 2
 
-//? Déclaration du serveur du Broker MQTT
-const char* mqtt_server = "broker.emqx.io";
+//? Déclaration de callback
+void callback(char *topic, byte *payload, unsigned int length);
 
-WiFiClient espClient; // gère la connexion réseau
-PubSubClient client(espClient); // client MQTT qui utilise espClient pour communiquer
+// MQTT Broker
+const char *mqtt_broker = "broker.emqx.io";
+const char *topic = "test/swot";
+const char *mqtt_username = "emqx";
+const char *mqtt_password = "public";
+const int mqtt_port = 1883;
 
-JsonDocument doc;
+Sonar sonar(23, 22); // Trig pin 23, Echo pin 22
+WiFiClient espClient;
+PubSubClient client(espClient);
+HTTPClient http;
 
-//? Fonction de rappel pour traiter les messages MQTT
-void callback(char* topic, byte* payload, unsigned int length);
-
-void reconnect() {
-  while (!client.connected()) {
-    if (client.connect("ESP32Client")) {
-      client.subscribe("test/swot");
-    } else {
-      delay(5000);
-    }
-  }
-}
-
-void setup(){
+void setup() {
+    // Set software serial baud to 115200;
     Serial.begin(115200);
-    delay(1000);
 
-    WiFi.mode(WIFI_STA); //Optional
+    // Set GPIO 2 as output
+    pinMode(led, OUTPUT);
+    // Connecting to a WiFi network
     WiFi.begin(ssid, password);
-    Serial.println("\nConnecting");
-
-    while(WiFi.status() != WL_CONNECTED){
-        Serial.print(".");
-        delay(100);
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.println("Connecting to WiFi..");
     }
-
-    Serial.println("\nConnected to the WiFi network");
-    Serial.print("Local ESP32 IP: ");
-    Serial.println(WiFi.localIP());
-
-    client.setServer(mqtt_server, 1883);
+    Serial.println("Connected to the Wi-Fi network");
+    //connecting to a mqtt broker
+    client.setServer(mqtt_broker, mqtt_port);
     client.setCallback(callback);
-}
-
-//? Callback quand un message est reçu
-void callback(char* topic, byte* payload, unsigned int length) {
-  String message;
-  for (int i = 0; i < length; i++) message += (char)payload[i];
-
-  if (String(topic) == "test/swot") {
-    StaticJsonDocument<200> doc;
-    DeserializationError error = deserializeJson(doc, message);
-    if (!error) {
-      for (JsonPair kv : doc.as<JsonObject>()) {
-        String ordre = kv.key().c_str();      // La clé (ex: "allumer_led")
-        String param = kv.value().as<String>(); // La valeur associée (ex: "rouge")
-        // Ici tu peux faire un switch ou if sur "ordre" pour exécuter l'action correspondante
-        if (ordre == "allumer_led") {
-          // Allume la LED de la couleur "param"
-            if (param == "rouge") {
-                digitalWrite(ledPin, HIGH); // Allume la LED rouge
-            } else if (param == "vert") {
-                digitalWrite(led2, HIGH); // Allume la LED verte
-            }
-        } else if (ordre == "eteindre_led") {
-          // Éteins la LED
-            if (param == "rouge") {
-                digitalWrite(ledPin, LOW); // Éteint la LED rouge
-            } else if (param == "vert") {
-                digitalWrite(led2, LOW); // Éteint la LED verte
-            }
+    while (!client.connected()) {
+        String client_id = "esp32-client-";
+        client_id += String(WiFi.macAddress());
+        Serial.printf("The client %s connects to the public MQTT broker\n", client_id.c_str());
+        if (client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
+            Serial.println("Public EMQX MQTT broker connected");
+        } else {
+            Serial.print("failed with state ");
+            Serial.print(client.state());
+            delay(2000);
         }
-        // etc.
-      }
     }
-  } else if (String(topic) == "test/swot") {
-    if (message == "ON") {
-      // Allume une LED par exemple
-    }
-  }
+    // Publish and subscribe
+    client.publish(topic, "Hi, I'm ESP32 ^^");
+    client.subscribe(topic);
 }
 
-void loop(){
-  if (!client.connected()) {
-    reconnect();
-  }
-  client.loop();
+void callback(char *topic, byte *payload, unsigned int length) {
+    Serial.print("Message arrived in topic: ");
+    Serial.println(topic);
+    Serial.print("Message:");
+    String message;
+    for (int i = 0; i < length; i++) {
+        message += (char) payload[i];
+    }
+    if(message == "on") {
+        Serial.println("LED ON");
+        digitalWrite(led, HIGH);
+    } else if (message == "off") {
+        Serial.println("LED OFF");
+        digitalWrite(led, LOW);
+    } else if (message == "php") {
+        // Exemple d'appel POST vers un script PHP
+        String var1 = sonar.readDistanceString(); // Utilisation de la méthode pour obtenir la distance
+        String var2 = "100";
+        String postData = "sonar=" + var1 + "&lidar=" + var2;
+
+        http.begin("http://10.245.245.12/swotSite/swot/esp32.php");
+        http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        int httpResponseCode = http.POST(postData);
+        if (httpResponseCode > 0) {
+            String response = http.getString();
+            Serial.print("Réponse du serveur PHP : ");
+            Serial.println(response);
+        } else {
+            Serial.print("Erreur HTTP : ");
+            Serial.println(httpResponseCode);
+        }
+        http.end();
+    } else {
+        Serial.println("Unknown command");
+    }
+    Serial.print(message);
+    Serial.println();
+    Serial.println("-----------------------");
+}
+
+void loop() {
+    client.loop();
 }
