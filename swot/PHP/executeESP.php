@@ -1,4 +1,11 @@
 <?php
+/*
+ * Créé le  Sat May 17 2025
+ *
+ * Copyright (c) 2025 Your Company
+ */
+
+
 include 'bddConnect.php';
 
 // Création de la connexion à la base de données
