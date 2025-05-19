@@ -22,13 +22,13 @@ try {
     $dbco = $db->getConnection();
     
     if(isset($_POST['esp'])){
-        $stmt = $dbco->prepare("INSERT INTO data (DATE, HEURE, PROFONDEUR, timestamp) VALUES (:date, :heure, :profondeur, :timestamp)");
+        $stmt = $dbco->prepare("INSERT INTO data (DATE, HEURE, PROFONDEUR) VALUES (:date, :heure, :profondeur)");
         $stmt->execute([
             ':date' => getCurrentDate(),
             ':heure' => getCurrentTime(),
             ':profondeur' => $_POST['profondeur'],
-            ':timestamp' => $_POST['timestamp']
         ]);
+        echo "Données insérées avec succès.";
     }
 
 } catch (PDOException $e) {

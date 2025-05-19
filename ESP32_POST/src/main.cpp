@@ -2,7 +2,7 @@
 #include <PubSubClient.h>
 #include <Arduino.h>
 #include <HTTPClient.h>
-#include <../lib/sonar.hpp>
+#include <sonar.hpp>
 
 // WiFi
 const char *ssid = "WebSwotServer"; // Enter your Wi-Fi name
@@ -77,9 +77,9 @@ void callback(char *topic, byte *payload, unsigned int length) {
         // Exemple d'appel POST vers un script PHP
         String var1 = sonar.readDistanceString(); // Utilisation de la méthode pour obtenir la distance
         String var2 = "100";
-        String postData = "sonar=" + var1 + "&lidar=" + var2;
+        String postData = "profondeur=" + var1 + "&lidar=" + var2 + "&esp=esp32";
 
-        http.begin("http://10.245.245.12/swotSite/swot/esp32.php");
+        http.begin("http://10.245.245.12/swotSite/swot/php/esp32.php");
         http.addHeader("Content-Type", "application/x-www-form-urlencoded");
         int httpResponseCode = http.POST(postData);
         if (httpResponseCode > 0) {

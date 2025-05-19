@@ -66,7 +66,6 @@ try {
     exit();
 }
 if(isset($_POST['btn'])) {
-    // Redirection vers la page excel.php pour prendre une mesure
 
     //! La fonction de publication 
     $payload = array(
@@ -76,7 +75,7 @@ if(isset($_POST['btn'])) {
         // topic
         'test/swot',
         // payload
-        json_encode($payload),
+        "php",
         // qos
         0,
         // retain
