@@ -24,6 +24,25 @@ Un projet complet pour collecter des données de capteurs, les stocker, les anal
 6. **Déploiement**  
    - `deployment/` : configurations Apache/Nginx, `.env`, Makefile, etc.
 
+flowchart LR
+    subgraph Acquérir
+      LiDAR[Capteur LiDAR]
+      Ultra[Capteur Ultrason]
+    end
+
+    subgraph Traiter
+      ESP32_Proc[ESP32]
+    end
+
+    subgraph Communiquer
+      ESP32_Comm[ESP32]
+    end
+
+    LiDAR --> ESP32_Proc
+    Ultra --> ESP32_Proc
+    ESP32_Proc --> ESP32_Comm
+
+
 ## Installation rapide
 
 1. Cloner le dépôt  
